@@ -1,23 +1,19 @@
-import { redirect } from "next/navigation";
-import Sidebar from "@/components/Sidebar";
-import { getAdminSession } from "@/lib/auth";
+"use client";
 
-export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const session = await getAdminSession();
-  if (!session) redirect("/login");
+import { useEffect, useState } from "react";
+import AppSidebar from "@/components/AppSidebar";
+import TopHeader from "@/components/TopHeader";
+
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <div className="flex min-h-screen bg-slate-50 text-slate-900">
-      <Sidebar />
-      <main className="flex-1 p-5 md:p-8 overflow-y-auto">
-        <div className="md:hidden mb-5 flex flex-wrap gap-4 text-sm font-medium border-b pb-3 bg-white p-4 rounded-xl border">
-          <a href="/dashboard" className="hover:text-blue-600">Dashboard</a>
-          <a href="/dashboard/create-bill" className="hover:text-blue-600">Create Bill</a>
-          <a href="/dashboard/invoices" className="hover:text-blue-600">Invoices</a>
-          <a href="/dashboard/settings" className="hover:text-blue-600">Tax Settings</a>
-        </div>
-        {children}
-      </main>
+    <div className="flex min-h-screen bg-gray-50 text-gray-900">
+      <AppSidebar mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} />
+      <div className="flex flex-1 flex-col min-w-0">
+        <TopHeader onToggleMobileMenu={() => setMobileOpen(!mobileOpen)} />
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">{children}</main>
+      </div>
     </div>
   );
 }
