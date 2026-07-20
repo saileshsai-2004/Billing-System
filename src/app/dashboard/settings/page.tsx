@@ -87,7 +87,7 @@ export default function SettingsPage() {
         return;
       }
 
-      setMessage("Tax configuration saved successfully!");
+      setMessage("Company and tax configuration saved successfully!");
     } catch (err) {
       console.error(err);
       setIsError(true);
@@ -99,78 +99,84 @@ export default function SettingsPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center p-12">
-        <p className="text-slate-500">Loading tax settings...</p>
+      <div className="flex items-center justify-center p-12 text-xs font-semibold text-gray-400">
+        Loading tax settings...
       </div>
     );
   }
 
   return (
-    <div className="max-w-4xl">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight">Company & Tax Settings</h1>
-        <p className="mt-2 text-slate-500">
+    <div className="max-w-4xl space-y-8">
+      <div>
+        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-gray-900">
+          Company & Tax Settings
+        </h1>
+        <p className="mt-1 text-sm text-gray-500">
           Configure accountant-verified company tax details, GSTIN, supplier state, and tax rates.
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* Company Identity */}
-        <div className="rounded-2xl border bg-white p-6 md:p-8 space-y-6">
-          <h2 className="text-lg font-bold text-slate-900 border-b pb-3">Company Identity</h2>
-          <div className="grid gap-6 md:grid-cols-2">
+        <div className="rounded-3xl border border-gray-200 bg-white p-6 sm:p-8 space-y-6 shadow-xs">
+          <h2 className="text-base font-bold text-gray-900 border-b border-gray-100 pb-3">
+            Company Information
+          </h2>
+          <div className="grid gap-6 sm:grid-cols-2">
             <div>
-              <label className="block text-sm font-semibold text-slate-700">Company Legal Name</label>
+              <label className="block text-xs font-bold uppercase tracking-wider text-gray-700">Company Legal Name</label>
               <input
                 type="text"
                 required
                 value={formData.companyName}
                 onChange={(e) => setFormData({ ...formData, companyName: e.target.value })}
-                className="mt-2 w-full rounded-lg border px-4 py-2.5 text-sm"
+                className="mt-2 w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all"
               />
             </div>
             <div>
-              <label className="block text-sm font-semibold text-slate-700">Trade Name / Brand</label>
+              <label className="block text-xs font-bold uppercase tracking-wider text-gray-700">Trade Name / Brand</label>
               <input
                 type="text"
                 required
                 value={formData.tradeName}
                 onChange={(e) => setFormData({ ...formData, tradeName: e.target.value })}
-                className="mt-2 w-full rounded-lg border px-4 py-2.5 text-sm"
+                className="mt-2 w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all"
               />
             </div>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="grid gap-6 sm:grid-cols-2">
             <div>
-              <label className="block text-sm font-semibold text-slate-700">Company Email</label>
+              <label className="block text-xs font-bold uppercase tracking-wider text-gray-700">Company Email</label>
               <input
                 type="email"
                 required
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="mt-2 w-full rounded-lg border px-4 py-2.5 text-sm"
+                className="mt-2 w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all"
               />
             </div>
             <div>
-              <label className="block text-sm font-semibold text-slate-700">Company Phone</label>
+              <label className="block text-xs font-bold uppercase tracking-wider text-gray-700">Company Phone</label>
               <input
                 type="text"
                 required
                 value={formData.phone}
                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                className="mt-2 w-full rounded-lg border px-4 py-2.5 text-sm"
+                className="mt-2 w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all"
               />
             </div>
           </div>
         </div>
 
         {/* GST & Registration Details */}
-        <div className="rounded-2xl border bg-white p-6 md:p-8 space-y-6">
-          <h2 className="text-lg font-bold text-slate-900 border-b pb-3">GST & Tax Registration</h2>
-          <div className="grid gap-6 md:grid-cols-3">
+        <div className="rounded-3xl border border-gray-200 bg-white p-6 sm:p-8 space-y-6 shadow-xs">
+          <h2 className="text-base font-bold text-gray-900 border-b border-gray-100 pb-3">
+            Tax Configuration
+          </h2>
+          <div className="grid gap-6 sm:grid-cols-3">
             <div>
-              <label className="block text-sm font-semibold text-slate-700">GSTIN (15 Digits)</label>
+              <label className="block text-xs font-bold uppercase tracking-wider text-gray-700">GSTIN (15 Digits)</label>
               <input
                 type="text"
                 required
@@ -178,35 +184,35 @@ export default function SettingsPage() {
                 value={formData.gstin}
                 onChange={(e) => setFormData({ ...formData, gstin: e.target.value.toUpperCase() })}
                 placeholder="36AAAAA0000A1Z5"
-                className="mt-2 w-full rounded-lg border px-4 py-2.5 text-sm font-mono"
+                className="mt-2 w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm font-mono focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all"
               />
             </div>
             <div>
-              <label className="block text-sm font-semibold text-slate-700">PAN Number</label>
+              <label className="block text-xs font-bold uppercase tracking-wider text-gray-700">PAN Number</label>
               <input
                 type="text"
                 value={formData.pan}
                 onChange={(e) => setFormData({ ...formData, pan: e.target.value.toUpperCase() })}
                 placeholder="AAAAA0000A"
-                className="mt-2 w-full rounded-lg border px-4 py-2.5 text-sm font-mono"
+                className="mt-2 w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm font-mono focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all"
               />
             </div>
             <div>
-              <label className="block text-sm font-semibold text-slate-700">SAC Code</label>
+              <label className="block text-xs font-bold uppercase tracking-wider text-gray-700">SAC Code</label>
               <input
                 type="text"
                 required
                 value={formData.sacCode}
                 onChange={(e) => setFormData({ ...formData, sacCode: e.target.value })}
                 placeholder="999293"
-                className="mt-2 w-full rounded-lg border px-4 py-2.5 text-sm font-mono"
+                className="mt-2 w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm font-mono focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all"
               />
             </div>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="grid gap-6 sm:grid-cols-2">
             <div>
-              <label className="block text-sm font-semibold text-slate-700">Default GST Rate (%)</label>
+              <label className="block text-xs font-bold uppercase tracking-wider text-gray-700">Default GST Rate (%)</label>
               <input
                 type="number"
                 step="0.01"
@@ -215,15 +221,15 @@ export default function SettingsPage() {
                 max={100}
                 value={formData.gstRate}
                 onChange={(e) => setFormData({ ...formData, gstRate: parseFloat(e.target.value) || 0 })}
-                className="mt-2 w-full rounded-lg border px-4 py-2.5 text-sm"
+                className="mt-2 w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all"
               />
             </div>
             <div>
-              <label className="block text-sm font-semibold text-slate-700">Default Price Type</label>
+              <label className="block text-xs font-bold uppercase tracking-wider text-gray-700">Default Price Type</label>
               <select
                 value={formData.defaultPriceType}
                 onChange={(e) => setFormData({ ...formData, defaultPriceType: e.target.value })}
-                className="mt-2 w-full rounded-lg border bg-white px-4 py-2.5 text-sm"
+                className="mt-2 w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all"
               >
                 <option value="TAX_INCLUSIVE">Tax Inclusive</option>
                 <option value="TAX_EXCLUSIVE">Tax Exclusive</option>
@@ -233,36 +239,38 @@ export default function SettingsPage() {
         </div>
 
         {/* Registered Address & State */}
-        <div className="rounded-2xl border bg-white p-6 md:p-8 space-y-6">
-          <h2 className="text-lg font-bold text-slate-900 border-b pb-3">Registered Address & Supplier State</h2>
+        <div className="rounded-3xl border border-gray-200 bg-white p-6 sm:p-8 space-y-6 shadow-xs">
+          <h2 className="text-base font-bold text-gray-900 border-b border-gray-100 pb-3">
+            Registered Address & Supplier State
+          </h2>
           <div>
-            <label className="block text-sm font-semibold text-slate-700">Registered Address Line</label>
+            <label className="block text-xs font-bold uppercase tracking-wider text-gray-700">Registered Address Line</label>
             <input
               type="text"
               required
               value={formData.address}
               onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-              className="mt-2 w-full rounded-lg border px-4 py-2.5 text-sm"
+              className="mt-2 w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all"
             />
           </div>
 
-          <div className="grid gap-6 md:grid-cols-3">
+          <div className="grid gap-6 sm:grid-cols-3">
             <div>
-              <label className="block text-sm font-semibold text-slate-700">City</label>
+              <label className="block text-xs font-bold uppercase tracking-wider text-gray-700">City</label>
               <input
                 type="text"
                 required
                 value={formData.city}
                 onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                className="mt-2 w-full rounded-lg border px-4 py-2.5 text-sm"
+                className="mt-2 w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all"
               />
             </div>
             <div>
-              <label className="block text-sm font-semibold text-slate-700">Supplier State</label>
+              <label className="block text-xs font-bold uppercase tracking-wider text-gray-700">Supplier State</label>
               <select
                 value={formData.state}
                 onChange={(e) => setFormData({ ...formData, state: e.target.value })}
-                className="mt-2 w-full rounded-lg border bg-white px-4 py-2.5 text-sm"
+                className="mt-2 w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all"
               >
                 {INDIAN_STATES.map((s) => (
                   <option key={s} value={s}>
@@ -272,34 +280,37 @@ export default function SettingsPage() {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-semibold text-slate-700">State Code</label>
+              <label className="block text-xs font-bold uppercase tracking-wider text-gray-700">State Code</label>
               <input
                 type="text"
                 required
                 value={formData.stateCode}
                 onChange={(e) => setFormData({ ...formData, stateCode: e.target.value })}
                 placeholder="36"
-                className="mt-2 w-full rounded-lg border px-4 py-2.5 text-sm font-mono"
+                className="mt-2 w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm font-mono focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all"
               />
             </div>
           </div>
+        </div>
 
-          <div>
-            <label className="block text-sm font-semibold text-slate-700">Postal Code</label>
-            <input
-              type="text"
-              required
-              value={formData.postalCode}
-              onChange={(e) => setFormData({ ...formData, postalCode: e.target.value })}
-              className="mt-2 w-full rounded-lg border px-4 py-2.5 text-sm"
-            />
+        {/* Invoice Format Preview Card */}
+        <div className="rounded-3xl border border-gray-200 bg-white p-6 sm:p-8 space-y-3 shadow-xs">
+          <h2 className="text-base font-bold text-gray-900 border-b border-gray-100 pb-3">
+            Invoice Numbering Format
+          </h2>
+          <p className="text-xs text-gray-500">
+            System automatically generates sequential financial-year numbers in the format below:
+          </p>
+          <div className="bg-orange-50 p-4 rounded-2xl border border-orange-100 flex items-center justify-between">
+            <span className="text-xs font-bold text-gray-700">Current Sequential Format:</span>
+            <span className="font-mono font-extrabold text-orange-600 text-sm">ADY/26-27/000001</span>
           </div>
         </div>
 
         {message && (
           <div
-            className={`rounded-lg p-4 text-sm font-medium ${
-              isError ? "bg-red-50 text-red-700 border border-red-200" : "bg-emerald-50 text-emerald-700 border border-emerald-200"
+            className={`rounded-2xl p-4 text-xs font-semibold border ${
+              isError ? "bg-red-50 text-red-700 border-red-200" : "bg-emerald-50 text-emerald-700 border-emerald-200"
             }`}
           >
             {message}
@@ -309,7 +320,7 @@ export default function SettingsPage() {
         <button
           type="submit"
           disabled={saving}
-          className="rounded-lg bg-slate-900 px-6 py-3 font-semibold text-white hover:bg-slate-800 disabled:opacity-50 transition"
+          className="rounded-xl bg-orange-500 px-8 py-3.5 text-sm font-semibold text-white hover:bg-orange-600 disabled:opacity-50 transition-all shadow-md shadow-orange-500/20"
         >
           {saving ? "Saving Settings..." : "Save Tax Configuration"}
         </button>
