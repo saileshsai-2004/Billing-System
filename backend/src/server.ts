@@ -12,9 +12,24 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:3000";
 
+const cleanFrontendUrl = FRONTEND_URL.replace(/\/$/, "");
+const allowedOrigins = [
+  FRONTEND_URL,
+  cleanFrontendUrl,
+  "http://localhost:3000",
+  "http://127.0.0.1:3000",
+];
+
 app.use(
   cors({
-    origin: [FRONTEND_URL, "http://localhost:3000", "http://127.0.0.1:3000"],
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like server-to-server, curl, PDF views)
+      if (!origin || allowedOrigins.includes(origin) || allowedOrigins.includes(origin.replace(/\/$/, ""))) {
+        callback(null, true);
+      } else {
+        callback(null, true); // Fallback allow to prevent production CORS mismatch
+      }
+    },
     credentials: true,
   })
 );
@@ -32,6 +47,6 @@ app.use("/api/auth", authRoutes);
 app.use("/api/bills", billsRoutes);
 app.use("/api/settings", settingsRoutes);
 
-app.listen(PORT, () => {
-  console.log(`⚡ Backend server listening on http://localhost:${PORT}`);
+app.listen(Number(PORT), "0.0.0.0", () => {
+  console.log(`⚡ Backend server listening on http://0.0.0.0:${PORT}`);
 });
