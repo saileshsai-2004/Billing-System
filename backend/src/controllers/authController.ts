@@ -9,7 +9,7 @@ export async function login(req: Request, res: Response) {
     const { email: rawEmail, password } = req.body || {};
     const email = String(rawEmail || "").trim().toLowerCase();
 
-    if (!email || !password || !process.env.AUTH_SECRET) {
+    if (!email || !password) {
       return res.status(400).json({ message: "Email and password are required" });
     }
 
