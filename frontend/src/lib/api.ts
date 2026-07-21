@@ -1,9 +1,10 @@
-export const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
+export const API_URL = (
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"
+).replace(/\/$/, "");
 
 export async function fetchApi(path: string, options: RequestInit = {}) {
-  const isServer = typeof window === "undefined";
-  const baseUrl = API_URL || (isServer ? "http://localhost:5000" : "");
-  const url = path.startsWith("http") ? path : `${baseUrl}${path}`;
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+  const url = path.startsWith("http") ? path : `${API_URL}${normalizedPath}`;
 
   try {
     const response = await fetch(url, {
@@ -16,7 +17,7 @@ export async function fetchApi(path: string, options: RequestInit = {}) {
     });
     return response;
   } catch (err) {
-    console.error("API Fetch Error:", err);
+    console.error(`[API Fetch Error] Failed requesting ${url}:`, err);
     throw err;
   }
 }
