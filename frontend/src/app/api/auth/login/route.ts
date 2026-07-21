@@ -9,7 +9,7 @@ export async function POST(request: Request) {
     const { email: rawEmail, password } = await request.json();
     const email = String(rawEmail || "").trim().toLowerCase();
 
-    if (!email || !password || !process.env.AUTH_SECRET) {
+    if (!email || !password) {
       return NextResponse.json({ message: "Email and password are required" }, { status: 400 });
     }
 
@@ -18,11 +18,12 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: "Invalid email or password" }, { status: 401 });
     }
 
+    const secretStr = process.env.AUTH_SECRET || "adyapan-local-secret-2026-change-this";
     const token = await new SignJWT({ adminId: admin.id, email: admin.email })
       .setProtectedHeader({ alg: "HS256" })
       .setIssuedAt()
       .setExpirationTime("8h")
-      .sign(new TextEncoder().encode(process.env.AUTH_SECRET));
+      .sign(new TextEncoder().encode(secretStr));
 
     const response = NextResponse.json({ success: true });
     response.cookies.set(COOKIE_NAME, token, {

@@ -3,13 +3,18 @@ import { jwtVerify } from "jose";
 
 const COOKIE_NAME = "adyapan_admin_session";
 
+function getSecret() {
+  const secretStr = process.env.AUTH_SECRET || "adyapan-local-secret-2026-change-this";
+  return new TextEncoder().encode(secretStr);
+}
+
 export async function getAdminSession() {
   const cookieStore = await cookies();
   const token = cookieStore.get(COOKIE_NAME)?.value;
-  if (!token || !process.env.AUTH_SECRET) return null;
+  if (!token) return null;
 
   try {
-    const secret = new TextEncoder().encode(process.env.AUTH_SECRET);
+    const secret = getSecret();
     const { payload } = await jwtVerify(token, secret);
     return payload;
   } catch {
