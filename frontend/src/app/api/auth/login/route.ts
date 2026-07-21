@@ -34,8 +34,11 @@ export async function POST(request: Request) {
       path: "/",
     });
     return response;
-  } catch (error) {
-    console.error(error);
-    return NextResponse.json({ message: "Unable to login" }, { status: 500 });
+  } catch (error: any) {
+    console.error("Login route error:", error);
+    const detailMsg = error?.message?.includes("DATABASE_URL")
+      ? "Database connection URL (DATABASE_URL) is missing in environment variables."
+      : "Unable to login. Please check database configuration.";
+    return NextResponse.json({ message: detailMsg }, { status: 500 });
   }
 }
