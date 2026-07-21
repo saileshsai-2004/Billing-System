@@ -33,6 +33,9 @@ export async function sendBillEmail(input: SendMailInput) {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASS,
     },
+    connectionTimeout: 10000, // 10s max connection wait
+    greetingTimeout: 10000,
+    socketTimeout: 15000,
   });
 
   const formattedDate = input.invoiceDate ? new Date(input.invoiceDate).toLocaleDateString("en-IN") : new Date().toLocaleDateString("en-IN");

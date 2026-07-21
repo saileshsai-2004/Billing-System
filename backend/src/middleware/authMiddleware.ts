@@ -13,6 +13,8 @@ export async function requireAdminAuth(req: AuthenticatedRequest, res: Response,
     token = authHeader.split(" ")[1];
   } else if (req.cookies && req.cookies[COOKIE_NAME]) {
     token = req.cookies[COOKIE_NAME];
+  } else if (req.query && typeof req.query.token === "string") {
+    token = req.query.token as string;
   }
 
   if (!token) {

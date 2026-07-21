@@ -29,6 +29,9 @@ export default function LoginPage() {
         setLoading(false);
         return;
       }
+      if (data.token) {
+        localStorage.setItem("adyapan_token", data.token);
+      }
       router.push("/dashboard");
       router.refresh();
     } catch (err) {

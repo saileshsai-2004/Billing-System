@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import StatusBadge from "@/components/StatusBadge";
-import { fetchApi, API_URL } from "@/lib/api";
+import { fetchApi, API_URL, getPdfUrl, viewBillPdf } from "@/lib/api";
 
 type Bill = {
   id: string;
@@ -30,6 +30,10 @@ export default function InvoicesPage() {
   const fetchBills = async () => {
     try {
       const res = await fetchApi("/api/bills");
+      if (res.status === 401) {
+        window.location.href = "/login";
+        return;
+      }
       const data = await res.json();
       if (data.success) {
         setBills(data.bills);
@@ -178,14 +182,12 @@ export default function InvoicesPage() {
                     <StatusBadge status={bill.status} />
                   </td>
                   <td className="p-4 text-right space-x-2">
-                    <a
-                      href={`${API_URL}/api/bills/${bill.id}/pdf`}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <button
+                      onClick={() => viewBillPdf(bill.id).catch((err) => alert(err.message || "Unable to view PDF"))}
                       className="inline-flex items-center gap-1 rounded-xl border border-gray-200 px-3 py-1.5 font-semibold text-gray-700 hover:bg-orange-50 hover:text-orange-600 hover:border-orange-200 transition-colors"
                     >
                       View PDF
-                    </a>
+                    </button>
                     <button
                       onClick={() => handleResendEmail(bill.id)}
                       disabled={resendingId === bill.id}

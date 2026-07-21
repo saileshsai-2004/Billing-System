@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import StatCard from "@/components/StatCard";
 import StatusBadge from "@/components/StatusBadge";
-import { API_URL } from "@/lib/api";
+import { API_URL, getPdfUrl } from "@/lib/api";
 
 export const revalidate = 0;
 
@@ -178,7 +178,7 @@ export default async function DashboardPage() {
                     </td>
                     <td className="py-4 px-4 text-right">
                       <a
-                        href={`${API_URL}/api/bills/${bill.id}/pdf`}
+                        href={getPdfUrl(bill.id)}
                         target="_blank"
                         rel="noreferrer"
                         className="inline-flex items-center gap-1 rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-bold text-gray-700 hover:bg-gray-100 transition-colors shadow-2xs"

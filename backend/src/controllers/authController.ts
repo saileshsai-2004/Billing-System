@@ -20,10 +20,11 @@ export async function login(req: Request, res: Response) {
 
     const token = await createAdminToken({ adminId: admin.id, email: admin.email });
 
+    const isProd = process.env.NODE_ENV === "production";
     res.cookie(COOKIE_NAME, token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
+      secure: isProd,
+      sameSite: isProd ? "none" : "lax",
       maxAge: 60 * 60 * 8 * 1000, // 8 hours in ms
       path: "/",
     });
@@ -62,6 +63,11 @@ export async function me(req: AuthenticatedRequest, res: Response) {
 }
 
 export async function logout(req: Request, res: Response) {
-  res.clearCookie(COOKIE_NAME, { path: "/" });
+  const isProd = process.env.NODE_ENV === "production";
+  res.clearCookie(COOKIE_NAME, {
+    path: "/",
+    secure: isProd,
+    sameSite: isProd ? "none" : "lax",
+  });
   return res.json({ success: true });
 }

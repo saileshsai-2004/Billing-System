@@ -32,7 +32,12 @@ export default function TopHeader({ onToggleMobileMenu }: TopHeaderProps) {
   };
 
   async function handleLogout() {
-    await fetchApi("/api/auth/logout", { method: "POST" });
+    try {
+      await fetchApi("/api/auth/logout", { method: "POST" });
+    } catch (err) {
+      console.error(err);
+    }
+    localStorage.removeItem("adyapan_token");
     router.push("/login");
     router.refresh();
   }
