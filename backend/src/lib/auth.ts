@@ -2,11 +2,13 @@ import { jwtVerify, SignJWT } from "jose";
 
 const COOKIE_NAME = "adyapan_admin_session";
 
+function getSecret() {
+  const secretStr = process.env.AUTH_SECRET || "adyapan-local-secret-2026-change-this";
+  return new TextEncoder().encode(secretStr);
+}
+
 export async function createAdminToken(payload: { adminId: string; email: string }) {
-  if (!process.env.AUTH_SECRET) {
-    throw new Error("AUTH_SECRET is not configured");
-  }
-  const secret = new TextEncoder().encode(process.env.AUTH_SECRET);
+  const secret = getSecret();
   return new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
@@ -15,9 +17,9 @@ export async function createAdminToken(payload: { adminId: string; email: string
 }
 
 export async function verifyAdminToken(token: string) {
-  if (!token || !process.env.AUTH_SECRET) return null;
+  if (!token) return null;
   try {
-    const secret = new TextEncoder().encode(process.env.AUTH_SECRET);
+    const secret = getSecret();
     const { payload } = await jwtVerify(token, secret);
     return payload;
   } catch {
