@@ -1,9 +1,10 @@
-import { prisma } from "@/lib/prisma";
+"use client";
+
+import { useEffect, useState } from "react";
 import StatCard from "@/components/StatCard";
 import StatusBadge from "@/components/StatusBadge";
 import PdfButton from "@/components/PdfButton";
-
-export const revalidate = 0;
+import { fetchApi } from "@/lib/api";
 
 function getGreeting() {
   const hour = new Date().getHours();
@@ -12,39 +13,58 @@ function getGreeting() {
   return "Good Evening";
 }
 
-export default async function DashboardPage() {
-  let bills: any[] = [];
-  let totalInvoices = 0;
-  let aggregates: any = { _sum: { grandTotal: 0, taxableAmount: 0, totalTax: 0, amount: 0 } };
-  let emailFailedCount = 0;
-  let settings: any = null;
+export default function DashboardPage() {
+  const [bills, setBills] = useState<any[]>([]);
+  const [settings, setSettings] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
-  try {
-    if (process.env.DATABASE_URL) {
-      [bills, totalInvoices, aggregates, emailFailedCount, settings] = await Promise.all([
-        prisma.bill.findMany({ orderBy: { createdAt: "desc" }, take: 8 }),
-        prisma.bill.count(),
-        prisma.bill.aggregate({
-          _sum: {
-            grandTotal: true,
-            taxableAmount: true,
-            totalTax: true,
-            amount: true,
-          },
-        }),
-        prisma.bill.count({ where: { status: "EMAIL_FAILED" } }),
-        prisma.taxSettings.findUnique({ where: { id: "default" } }),
-      ]);
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const [billsRes, settingsRes] = await Promise.all([
+          fetchApi("/api/bills"),
+          fetchApi("/api/settings"),
+        ]);
+
+        if (billsRes.status === 401) {
+          window.location.href = "/login";
+          return;
+        }
+
+        const billsData = await billsRes.json().catch(() => ({}));
+        const settingsData = await settingsRes.json().catch(() => ({}));
+
+        if (billsData.success && Array.isArray(billsData.bills)) {
+          setBills(billsData.bills);
+        }
+        if (settingsData.success && settingsData.settings) {
+          setSettings(settingsData.settings);
+        }
+      } catch (err) {
+        console.error("Dashboard fetch error:", err);
+      } finally {
+        setLoading(false);
+      }
     }
-  } catch (err) {
-    console.error("Dashboard DB load notice:", err);
-  }
+    loadData();
+  }, []);
 
-  const totalValue = Number(aggregates?._sum?.grandTotal || aggregates?._sum?.amount || 0);
-  const totalTaxable = Number(aggregates?._sum?.taxableAmount || 0);
-  const totalTax = Number(aggregates?._sum?.totalTax || 0);
+  const totalInvoices = bills.length;
+  const totalValue = bills.reduce((sum, b) => sum + Number(b.grandTotal || b.amount || 0), 0);
+  const totalTaxable = bills.reduce((sum, b) => sum + Number(b.taxableAmount || 0), 0);
+  const totalTax = bills.reduce((sum, b) => sum + Number(b.totalTax || 0), 0);
+  const emailFailedCount = bills.filter((b) => b.status === "EMAIL_FAILED").length;
+  const recentBills = bills.slice(0, 8);
 
   const greeting = getGreeting();
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center p-12 text-xs font-semibold text-gray-400">
+        Loading dashboard...
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8 max-w-7xl">
@@ -152,7 +172,7 @@ export default async function DashboardPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100 font-medium">
-              {bills.length === 0 ? (
+              {recentBills.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="py-12 text-center text-gray-400">
                     <p className="text-sm font-semibold">No invoices generated yet.</p>
@@ -160,7 +180,7 @@ export default async function DashboardPage() {
                   </td>
                 </tr>
               ) : (
-                bills.map((bill) => (
+                recentBills.map((bill) => (
                   <tr key={bill.id} className="hover:bg-gray-50/50 transition-colors">
                     <td className="py-4 px-4 font-mono font-bold text-gray-900">
                       {bill.billNumber}
